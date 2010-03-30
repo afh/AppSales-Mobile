@@ -15,11 +15,13 @@
 	NSMutableArray *daysByMonth;
 	float maxRevenue;
 	NSDateFormatter *sectionTitleFormatter;
+	NSMutableDictionary *sectionTitleViews;
 }
 
 @property (retain) NSMutableArray *daysByMonth;
 @property (assign) float maxRevenue;
 @property (retain) NSDateFormatter *sectionTitleFormatter;
+@property (retain) NSMutableDictionary *sectionTitleViews;
 
 - (void)reload;
 
