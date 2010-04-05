@@ -364,8 +364,20 @@
 		[self.navigationController pushViewController:settingsController animated:YES];
 	}
 	else if ((row == 1) && (section == 2)) {
-		ImportExportViewController *vc = [[[ImportExportViewController alloc] initWithNibName:nil bundle:nil] autorelease];
-		[self.navigationController pushViewController:vc animated:YES];
+		NSError *error = nil;
+		NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:@"iTunesConnectUsername"];
+		NSString *password = nil;
+		if (username) {
+			password = [SFHFKeychainUtils getPasswordForUsername:username andServiceName:@"omz:software AppSales Mobile Service" error:&error];
+		}
+		if (!username || !password || [username isEqual:@""] || [password isEqual:@""]) {
+			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Username / Password Missing",nil) message:NSLocalizedString(@"Please enter a username and a password in the settings.",nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK",nil) otherButtonTitles:nil] autorelease];
+			[alert show];
+		}
+		else {
+			ImportExportViewController *vc = [[[ImportExportViewController alloc] initWithNibName:nil bundle:nil] autorelease];
+			[self.navigationController pushViewController:vc animated:YES];
+		}
 		
 	}
 	
