@@ -42,8 +42,8 @@ AppSalesMobile
 	StatisticsViewController *statisticsController;
 	ReviewsController *reviewsController;
 	
-	UIView *dailyTrendView;
-	UIView *weeklyTrendView;
+	UIImageView *dailyTrendView;
+	UIImageView *weeklyTrendView;
 }
 
 @property (nonatomic, retain) UIActivityIndicatorView *activityIndicator;
@@ -53,12 +53,12 @@ AppSalesMobile
 @property (nonatomic, retain) SettingsViewController *settingsController;
 @property (nonatomic, retain) StatisticsViewController *statisticsController;
 @property (nonatomic, retain) ReviewsController *reviewsController;
-@property (nonatomic, retain) UIView *dailyTrendView;
-@property (nonatomic, retain) UIView *weeklyTrendView;
+@property (nonatomic, retain) UIImageView *dailyTrendView;
+@property (nonatomic, retain) UIImageView *weeklyTrendView;
 
 - (void)updateProgress;
 - (void)refreshDailyTrend;
 - (void)refreshWeeklyTrend;
-- (UIImage *)sparklineForReports:(NSArray *)days;
+- (UIImage *)sparklineForReports:(NSArray *)days highlight:(BOOL)isHighlight;
 
 @end

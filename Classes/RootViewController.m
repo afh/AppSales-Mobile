@@ -103,12 +103,15 @@
 
 - (void)refreshDailyTrend
 {
-	UIImage *sparkline = [self sparklineForReports:[[ReportManager sharedManager].days allValues]];
+	NSArray *dailyReports = [[ReportManager sharedManager].days allValues];
+	UIImage *sparkline = [self sparklineForReports:dailyReports highlight:NO];
 	self.dailyTrendView = [[[UIImageView alloc] initWithImage:sparkline] autorelease];
+	UIImage *highlightedSparkline = [self sparklineForReports:dailyReports highlight:YES];
+	self.dailyTrendView.highlightedImage = highlightedSparkline;
 	[self.tableView reloadData];
 }
 
-- (UIImage *)sparklineForReports:(NSArray *)days
+- (UIImage *)sparklineForReports:(NSArray *)days highlight:(BOOL)isHighlight
 {
 	UIGraphicsBeginImageContext(CGSizeMake(120, 30));
 	CGContextRef c = UIGraphicsGetCurrentContext();
@@ -178,19 +181,21 @@
 		i++;
 	}
 	if ([unitSales count] > 1) {
-		CGContextSetLineWidth(c, 1.0);
+		CGFloat lineWidth = (isHighlight) ? 1.5 : 1.0;
+		CGContextSetLineWidth(c, lineWidth);
 		CGContextSetLineJoin(c, kCGLineJoinRound);
 		CGContextSetLineCap(c, kCGLineCapRound);
 		
 		CGMutablePathRef fillPath = CGPathCreateMutableCopy(path);
 		CGPathAddLineToPoint(fillPath, NULL, prevX, maxY);
 		CGPathAddLineToPoint(fillPath, NULL, minX, maxY);
-		[[UIColor colorWithWhite:0.95 alpha:1.0] set];
+		CGFloat alpha = (isHighlight) ? 0.5 : 1.0;
+		[[UIColor colorWithWhite:0.95 alpha:alpha] set];
 		CGContextAddPath(c, fillPath);
 		CGContextFillPath(c);
 		CGPathRelease(fillPath);
 		
-		[[UIColor grayColor] set];
+		(isHighlight) ? [[UIColor whiteColor] set] : [[UIColor grayColor] set];
 		CGContextAddPath(c, path);
 		CGContextStrokePath(c);
 				
@@ -203,6 +208,9 @@
 		int roundedPercent = (int)(percentage * 100.0);
 		NSString *percentString = (roundedPercent < 0) ? [NSString stringWithFormat:@"%i%%", roundedPercent] : [NSString stringWithFormat:@"+%i%%", roundedPercent];
 		[(reportIsLatest) ? ([UIColor blackColor]) : ([UIColor darkGrayColor]) set];
+		if (isHighlight) {
+			[[UIColor whiteColor] set];
+		}
 		[percentString drawInRect:CGRectMake(80, 7, 40, 15) withFont:[UIFont boldSystemFontOfSize:12.0]];
 	}
 	CGPathRelease(path);
@@ -214,8 +222,11 @@
 
 - (void)refreshWeeklyTrend
 {
-	UIImage *sparkline = [self sparklineForReports:[[ReportManager sharedManager].weeks allValues]];
+	NSArray *weeklyReports = [[ReportManager sharedManager].weeks allValues];
+	UIImage *sparkline = [self sparklineForReports:weeklyReports highlight:NO];
 	self.weeklyTrendView = [[[UIImageView alloc] initWithImage:sparkline] autorelease];
+	UIImage *highlightedSparkline = [self sparklineForReports:weeklyReports highlight:YES];
+	self.weeklyTrendView.highlightedImage = highlightedSparkline;
 	[self.tableView reloadData];
 }
 
